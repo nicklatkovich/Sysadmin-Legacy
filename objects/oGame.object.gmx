@@ -28,13 +28,7 @@
             <string>
 map_width = 10;
 map_height = 10;
-map = ds_grid_create(map_width, map_height);
-
-for (var i = 0; i &lt; map_width; i++) {
-    for (var j = 0; j &lt; map_height; j++) {
-        ds_grid_set(map, i, j, 0);
-    }
-}
+map = scr_map_generate(map_width, map_height, 1, 1);
 
 </string>
           </argument>
@@ -111,7 +105,11 @@ for (var i = 0; i &lt;= map_height; i++) {
 /// Cell Drawing
 for (var i = 0; i &lt; map_width; i++) {
     for (var j = 0; j &lt; map_height; j++) {
-        // Draw cell
+        var x1 = (i + 0.5) * cell_size + xx;
+        var y1 = (j + 0.5) * cell_size + yy;
+        draw_set_valign(fa_middle);
+        draw_set_halign(fa_center);
+        draw_text(x1, y1, ds_grid_get(map, i, j));
     }
 }
 

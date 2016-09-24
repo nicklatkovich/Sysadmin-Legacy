@@ -11,6 +11,13 @@
   <scripts name="scripts">
     <script>scripts\scr_display_resize.gml</script>
     <script>scripts\scr_viewes_resize.gml</script>
+    <script>scripts\scr_map_generate.gml</script>
+    <script>scripts\rand.gml</script>
+    <script>scripts\dx.gml</script>
+    <script>scripts\dy.gml</script>
+    <script>scripts\in_range.gml</script>
+    <script>scripts\ds.gml</script>
+    <script>scripts\ads.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\oAppSurf</object>
@@ -21,6 +28,9 @@
     <room>rooms\rm_init</room>
     <room>rooms\rm_game</room>
   </rooms>
+  <constants number="1">
+    <constant name="MAX_UINT">4294967296</constant>
+  </constants>
   <help>
     <rtf>help.rtf</rtf>
   </help>
