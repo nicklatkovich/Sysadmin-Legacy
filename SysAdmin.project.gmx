@@ -8,6 +8,18 @@
   <sprites name="sprites"/>
   <backgrounds name="background"/>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <script>scripts\scr_display_resize.gml</script>
+    <script>scripts\scr_viewes_resize.gml</script>
+  </scripts>
+  <objects name="objects">
+    <object>objects\oAppSurf</object>
+    <object>objects\oFPSViewer</object>
+  </objects>
+  <rooms name="rooms">
+    <room>rooms\rm_init</room>
+    <room>rooms\rm_game</room>
+  </rooms>
   <help>
     <rtf>help.rtf</rtf>
   </help>
