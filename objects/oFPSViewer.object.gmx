@@ -79,6 +79,8 @@ alarm[0] = 30;
             <kind>1</kind>
             <string>
 if (FPS != "") {
+    draw_set_valign(fa_middle);
+    draw_set_halign(fa_center);
     draw_text(0, 0, "FPS = " + FPS);
 }
 
