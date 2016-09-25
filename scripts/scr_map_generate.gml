@@ -30,40 +30,42 @@ while (ds_list_size(list_x) > 0 && done_cell / cell_num < full) {
     var yy = ds_list_find_value(list_y, k);
     ds_list_delete(list_x, k);
     ds_list_delete(list_y, k);
-    ds_grid_set(result, xx, yy, 1);
-    
-    var near_cells = 0;
-    
-    for (var i = 0; i < 4; i++) {
-        var x1 = xx + dx(i);
-        var y1 = yy + dy(i);
-        if (in_range(x1, 0, map_width) && in_range(y1, 0, map_height)) {
-            // Cell is on map
-            var grid_cell = ds_grid_get(result, x1, y1);
-            if (grid_cell == 0) {
-                ds_list_add(list_x, x1);
-                ds_list_add(list_y, y1);
-                ds_grid_set(result, x1, y1, -1);
-            } else if (grid_cell > 0) {
-                near_cells++;
+    if (ds_grid_get(result, xx, yy) == -1) {
+        ds_grid_set(result, xx, yy, 1);
+        
+        var near_cells = 0;
+        
+        for (var i = 0; i < 4; i++) {
+            var x1 = xx + dx(i);
+            var y1 = yy + dy(i);
+            if (in_range(x1, 0, map_width) && in_range(y1, 0, map_height)) {
+                // Cell is on map
+                var grid_cell = ds_grid_get(result, x1, y1);
+                if (grid_cell == 0) {
+                    ds_list_add(list_x, x1);
+                    ds_list_add(list_y, y1);
+                    ds_grid_set(result, x1, y1, -1);
+                } else if (grid_cell > 0) {
+                    near_cells++;
+                }
             }
         }
-    }
-    
-    var near = rand(near_cells);
-    for (var i = 0; i < 4; i++) {
-        var x1 = xx + dx(i);
-        var y1 = yy + dy(i);
-        if (in_range(x1, 0, map_width) && in_range(y1, 0, map_height)) {
-            var grid_cell = ds_grid_get(result, x1, y1);
-            if (grid_cell > 0) {
-                near--;
-                if (near < 0) {
-                    ds_grid_set(result, xx, yy,
-                        ds(i));
-                    ds_grid_set(result, x1, y1,
-                        grid_cell * ds(i + 2));
-                    i = MAX_UINT;
+        
+        var near = rand(near_cells);
+        for (var i = 0; i < 4; i++) {
+            var x1 = xx + dx(i);
+            var y1 = yy + dy(i);
+            if (in_range(x1, 0, map_width) && in_range(y1, 0, map_height)) {
+                var grid_cell = ds_grid_get(result, x1, y1);
+                if (grid_cell > 0) {
+                    near--;
+                    if (near < 0) {
+                        ds_grid_set(result, xx, yy,
+                            ds(i));
+                        ds_grid_set(result, x1, y1,
+                            grid_cell * ds(i + 2));
+                        i = MAX_UINT;
+                    }
                 }
             }
         }
