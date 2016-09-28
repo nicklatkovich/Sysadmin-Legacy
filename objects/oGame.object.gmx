@@ -90,7 +90,7 @@ xx = (oAppSurf.dis_w - cell_size * map_width) / 2;
 yy = (oAppSurf.dis_h - cell_size * map_height) / 2;
 
 /// Grid Drawing
-
+/*
 var grid_line_width = cell_size div 16;
 for (var i = 0; i &lt;= map_width; i++) {
     var x1 = xx + i * cell_size;
@@ -101,6 +101,7 @@ for (var i = 0; i &lt;= map_height; i++) {
     var y1 = yy + i * cell_size;
     draw_line_width(xx, y1, xx + cell_size * map_width, y1, grid_line_width);
 }
+*/
 
 /// Cell Drawing
 for (var i = 0; i &lt; map_width; i++) {
