@@ -28,7 +28,7 @@
             <string>
 map_width = 10;
 map_height = 10;
-map = scr_map_generate(map_width, map_height, 1, 1);
+map = scr_maze_generate(map_width, map_height, 1, 1);
 
 </string>
           </argument>

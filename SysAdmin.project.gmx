@@ -11,7 +11,7 @@
   <scripts name="scripts">
     <script>scripts\scr_display_resize.gml</script>
     <script>scripts\scr_viewes_resize.gml</script>
-    <script>scripts\scr_map_generate.gml</script>
+    <script>scripts\scr_maze_generate.gml</script>
     <script>scripts\rand.gml</script>
     <script>scripts\dx.gml</script>
     <script>scripts\dy.gml</script>
