@@ -107,9 +107,12 @@ for (var i = 0; i &lt; map_width; i++) {
     for (var j = 0; j &lt; map_height; j++) {
         var x1 = (i + 0.5) * cell_size + xx;
         var y1 = (j + 0.5) * cell_size + yy;
-        draw_set_valign(fa_middle);
-        draw_set_halign(fa_center);
-        draw_text(x1, y1, ds_grid_get(map, i, j));
+        var cell = ds_grid_get(map, i, j);
+        for (var d = 0; d &lt; 4; d++) {
+            if (cell % ds(d) == 0) {
+                draw_line_width(x1, y1, x1 + dx(d) * cell_size, y1 + dy(d) * cell_size, 4);
+            }
+        }
     }
 }
 
