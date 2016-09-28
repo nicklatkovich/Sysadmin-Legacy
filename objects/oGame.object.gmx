@@ -37,10 +37,17 @@ enum OBJS {
 };
 
 objs = ds_grid_create(map_width, map_height);
+ways = ds_grid_create(map_width, map_height);
+
 var cross_num = 0;
 for (var i = 0; i &lt; map_width; i++) {
     for (var j = 0; j &lt; map_height; j++) {
-        var l = dl(ds_grid_get(map, i, j));
+        
+        var way = instance_create(0, 0, oWay);
+        way.state = ds_grid_get(map, i, j);
+        ds_grid_set(ways, i, j, way);
+        
+        var l = dl(way.state);
         if (l == 1) {
             ds_grid_set(objs, i, j, OBJS.comp);
         } else {
@@ -78,6 +85,9 @@ if (cross_num &gt; 0) {
 }
 */
 
+dis_w = -1;
+dis_h = -1;
+
 </string>
           </argument>
         </arguments>
@@ -103,6 +113,57 @@ if (cross_num &gt; 0) {
             <string>
 ds_grid_destroy(map);
 ds_grid_destroy(objs);
+ds_grid_destroy(ways);
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>
+if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
+    dis_w = oAppSurf.dis_w;
+    dis_h = oAppSurf.dis_h;
+
+    if (map_width / map_height &gt; dis_w / dis_h) {
+        cell_size = dis_w / map_width;
+    } else {
+        cell_size = dis_h / map_height;
+    }
+    
+    half_cell_size = cell_size / 2;
+    line_length = cell_size * 0.7;
+    
+    xx = (dis_w - cell_size * map_width) / 2;
+    yy = (dis_h - cell_size * map_height) / 2;
+    
+    for (var i = 0; i &lt; map_width; i++) {
+        var x2 = (i + 0.5) * cell_size + xx;
+        for (var j = 0; j &lt; map_height; j++) {
+            var y2 = (j + 0.5) * cell_size + yy;
+            var way = ds_grid_get(ways, i, j);
+            way.x = x2;
+            way.y = y2;
+        }
+    }
+}
 
 </string>
           </argument>
@@ -156,6 +217,7 @@ for (var i = 0; i &lt;= map_height; i++) {
 */
 
 /// Cell Drawing
+/*
 draw_set_color(c_green);
 for (var i = 0; i &lt; map_width; i++) {
     var x2 = i * cell_size + xx;
@@ -164,7 +226,7 @@ for (var i = 0; i &lt; map_width; i++) {
         var y2 = j * cell_size + yy;
         var y1 = y2 + half_cell_size;
         var cell = ds_grid_get(map, i, j);
-        if (cell != CROSS) {
+        if (cell != CROSS_CELL) {
             for (var d = 0; d &lt; 4; d++) {
                 if (cell % ds(d) == 0) {
                     draw_line_width(x1, y1, x1 + dx(d) * line_length, y1 + dy(d) * line_length, 4);
@@ -173,6 +235,7 @@ for (var i = 0; i &lt; map_width; i++) {
         }
     }
 }
+*/
 
 for (var i = 0; i &lt; map_width; i++) {
     var x2 = i * cell_size + xx;

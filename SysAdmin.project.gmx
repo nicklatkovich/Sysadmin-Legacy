@@ -27,13 +27,15 @@
     <object>objects\oAppSurf</object>
     <object>objects\oFPSViewer</object>
     <object>objects\oGame</object>
+    <object>objects\oWay</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_init</room>
     <room>rooms\rm_game</room>
   </rooms>
-  <constants number="2">
-    <constant name="CROSS">210</constant>
+  <constants number="3">
+    <constant name="NULL_CELL">1</constant>
+    <constant name="CROSS_CELL">210</constant>
     <constant name="MAX_UINT">4294967296</constant>
   </constants>
   <help>

@@ -4,7 +4,7 @@
   <solid>0</solid>
   <visible>-1</visible>
   <depth>5</depth>
-  <persistent>-1</persistent>
+  <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
@@ -26,20 +26,15 @@
           <argument>
             <kind>1</kind>
             <string>
-if (window_get_fullscreen()) {
-    scr_display_resize(display_get_width(), display_get_height());
-} else {
-    scr_display_resize(413, 704);
-}
-
-instance_create(0, 0, oFPSViewer);
+state = NULL_CELL;
+line_length = 0;
 
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="3" enumb="0">
+    <event eventtype="8" enumb="0">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -56,13 +51,13 @@ instance_create(0, 0, oFPSViewer);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Check for fullscreen resize
-
-if (window_get_fullscreen()) {
-    var new_dis_w = display_get_width();
-    var new_dis_h = display_get_height();
-    if (dis_w != new_dis_w || dis_h != new_dis_h) {
-        scr_display_resize(new_dis_w, new_dis_h);
+            <string>
+draw_set_color(c_green);
+if (state != CROSS_CELL) {
+    for (var d = 0; d &lt; 4; d++) {
+        if (state % ds(d) == 0) {
+            draw_line_width(x, y, x + dx(d) * oGame.line_length, y + dy(d) * oGame.line_length, 4);
+        }
     }
 }
 
