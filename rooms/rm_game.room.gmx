@@ -8,7 +8,7 @@
   <isometric>0</isometric>
   <speed>60</speed>
   <persistent>0</persistent>
-  <colour>12632256</colour>
+  <colour>2105376</colour>
   <showcolour>-1</showcolour>
   <code>scr_viewes_resize();</code>
   <enableViews>-1</enableViews>

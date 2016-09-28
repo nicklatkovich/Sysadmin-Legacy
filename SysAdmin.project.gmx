@@ -5,7 +5,10 @@
   </Configs>
   <NewExtensions/>
   <sounds name="sound"/>
-  <sprites name="sprites"/>
+  <sprites name="sprites">
+    <sprite>sprites\sComp</sprite>
+    <sprite>sprites\sHub</sprite>
+  </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
@@ -18,6 +21,7 @@
     <script>scripts\in_range.gml</script>
     <script>scripts\ds.gml</script>
     <script>scripts\ads.gml</script>
+    <script>scripts\dl.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\oAppSurf</object>
@@ -28,7 +32,8 @@
     <room>rooms\rm_init</room>
     <room>rooms\rm_game</room>
   </rooms>
-  <constants number="1">
+  <constants number="2">
+    <constant name="CROSS">210</constant>
     <constant name="MAX_UINT">4294967296</constant>
   </constants>
   <help>

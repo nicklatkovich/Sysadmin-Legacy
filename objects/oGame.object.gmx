@@ -30,6 +30,54 @@ map_width = 10;
 map_height = 10;
 map = scr_maze_generate(map_width, map_height, 1, 1);
 
+enum OBJS {
+    null,
+    comp,
+    hub
+};
+
+objs = ds_grid_create(map_width, map_height);
+var cross_num = 0;
+for (var i = 0; i &lt; map_width; i++) {
+    for (var j = 0; j &lt; map_height; j++) {
+        var l = dl(ds_grid_get(map, i, j));
+        if (l == 1) {
+            ds_grid_set(objs, i, j, OBJS.comp);
+        } else {
+        /*
+            ds_grid_set(objs, i, j, OBJS.null);
+            if (l == 4) {
+                cross_num++;
+            }
+        */
+            if (l == 4) {
+                ds_grid_set(objs, i, j, OBJS.hub);
+            } else {
+                ds_grid_set(objs, i, j, OBJS.null);
+            }
+        }
+    }
+}
+
+/*
+if (cross_num &gt; 0) {
+    var cur_cross = rand(cross_num);
+    for (var i = 0; i &lt; map_width; i++) {
+        for (var j = 0; j &lt; map_height; j++) {
+            var l = dl(ds_grid_get(map, i, j));
+            if (l == 4) {
+                cur_cross--;
+                if (cur_cross &lt; 0) {
+                    ds_grid_set(objs, i, j, OBJS.hub);
+                    j = MAX_UINT;
+                    i = MAX_UINT;
+                }
+            }
+        }
+    }
+}
+*/
+
 </string>
           </argument>
         </arguments>
@@ -54,6 +102,7 @@ map = scr_maze_generate(map_width, map_height, 1, 1);
             <kind>1</kind>
             <string>
 ds_grid_destroy(map);
+ds_grid_destroy(objs);
 
 </string>
           </argument>
@@ -86,6 +135,9 @@ if (map_width / map_height &gt; oAppSurf.dis_w / oAppSurf.dis_h) {
     cell_size = oAppSurf.dis_h / map_height;
 }
 
+var half_cell_size = cell_size / 2;
+var line_length = cell_size * 0.7;
+
 xx = (oAppSurf.dis_w - cell_size * map_width) / 2;
 yy = (oAppSurf.dis_h - cell_size * map_height) / 2;
 
@@ -104,15 +156,33 @@ for (var i = 0; i &lt;= map_height; i++) {
 */
 
 /// Cell Drawing
+draw_set_color(c_green);
 for (var i = 0; i &lt; map_width; i++) {
+    var x2 = i * cell_size + xx;
+    var x1 = x2 + half_cell_size;
     for (var j = 0; j &lt; map_height; j++) {
-        var x1 = (i + 0.5) * cell_size + xx;
-        var y1 = (j + 0.5) * cell_size + yy;
+        var y2 = j * cell_size + yy;
+        var y1 = y2 + half_cell_size;
         var cell = ds_grid_get(map, i, j);
-        for (var d = 0; d &lt; 4; d++) {
-            if (cell % ds(d) == 0) {
-                draw_line_width(x1, y1, x1 + dx(d) * cell_size, y1 + dy(d) * cell_size, 4);
+        if (cell != CROSS) {
+            for (var d = 0; d &lt; 4; d++) {
+                if (cell % ds(d) == 0) {
+                    draw_line_width(x1, y1, x1 + dx(d) * line_length, y1 + dy(d) * line_length, 4);
+                }
             }
+        }
+    }
+}
+
+for (var i = 0; i &lt; map_width; i++) {
+    var x2 = i * cell_size + xx;
+    for (var j = 0; j &lt; map_height; j++) {
+        var y2 = j * cell_size + yy;
+        var obj = ds_grid_get(objs, i, j);
+        if (obj == OBJS.comp) {
+            draw_sprite_stretched(sComp, 0, x2, y2, cell_size, cell_size);
+        } else if (obj == OBJS.hub) {
+            draw_sprite_stretched(sHub, 0, x2, y2, cell_size, cell_size);
         }
     }
 }
