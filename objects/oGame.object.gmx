@@ -163,8 +163,8 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
     line_length = cell_size * 0.7;
     map_w = map_width * cell_size;
     map_h = map_height * cell_size;
-    xx = (dis_w - cell_size * map_width) / 2;
-    yy = (dis_h - cell_size * map_height) / 2;
+    xx = (dis_w - cell_size * map_width) / 2 mod map_w;
+    yy = (dis_h - cell_size * map_height) / 2 mod map_h;
     
     for (var i = 0; i &lt; map_width; i++) {
         var x2 = (i + 0.5) * cell_size;
