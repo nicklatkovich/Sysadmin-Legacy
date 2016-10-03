@@ -31,6 +31,7 @@ while (ds_list_size(list_x) > 0 && done_cell / cell_num < full) {
     ds_list_delete(list_x, k);
     ds_list_delete(list_y, k);
     if (ds_grid_get(result, xx, yy) == -1) {
+        done_cell++;
         ds_grid_set(result, xx, yy, 1);
         
         var near_cells = 0;

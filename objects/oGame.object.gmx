@@ -47,26 +47,28 @@ map_surf = -1;
 var cross_num = 0;
 for (var i = 0; i &lt; map_width; i++) {
     for (var j = 0; j &lt; map_height; j++) {
-        
-        var way = instance_create(0, 0, oWay);
-        way.state = ds_grid_get(map, i, j);
-        way.dl_state = dl(way.state);
-        ds_grid_set(ways, i, j, way);
-        
-        var l = dl(way.state);
-        if (l == 1) {
-            ds_grid_set(objs, i, j, OBJS.comp);
-        } else {
-        /*
-            ds_grid_set(objs, i, j, OBJS.null);
-            if (l == 4) {
-                cross_num++;
-            }
-        */
-            if (l == 4) {
-                ds_grid_set(objs, i, j, OBJS.hub);
+        var ds_get = ds_grid_get(map, i, j);
+        if (ds_get &gt; 0) {
+            var way = instance_create(0, 0, oWay);
+            way.state = ds_get;
+            way.dl_state = dl(way.state);
+            ds_grid_set(ways, i, j, way);
+            
+            var l = dl(way.state);
+            if (l == 1) {
+                ds_grid_set(objs, i, j, OBJS.comp);
             } else {
+            /*
                 ds_grid_set(objs, i, j, OBJS.null);
+                if (l == 4) {
+                    cross_num++;
+                }
+            */
+                if (l == 4) {
+                    ds_grid_set(objs, i, j, OBJS.hub);
+                } else {
+                    ds_grid_set(objs, i, j, OBJS.null);
+                }
             }
         }
     }
