@@ -28,7 +28,7 @@
             <string>
 map_width = 20;
 map_height = 20;
-map = scr_maze_generate(map_width, map_height, 1, 1);
+map = scr_maze_generate(map_width, map_height, 1, 1, true);
 
 enum OBJS {
     null,

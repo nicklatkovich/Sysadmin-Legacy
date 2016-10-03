@@ -1,9 +1,10 @@
-/// scr_map_generate(map_width:int, map_height:int, seed:int, full:[0, 1]) : ds_grid
+/// scr_map_generate(map_width:int, map_height:int, seed:int, full:[0, 1], loop:bool) : ds_grid
 
 var map_width  = argument0;
 var map_height = argument1;
 var seed       = argument2;
 var full       = argument3;
+var loop       = argument4;
 
 var result = ds_grid_create(map_width, map_height);
 for (var i = 0; i < map_width; i++) {
@@ -39,6 +40,18 @@ while (ds_list_size(list_x) > 0 && done_cell / cell_num < full) {
         for (var i = 0; i < 4; i++) {
             var x1 = xx + dx(i);
             var y1 = yy + dy(i);
+            if (loop) {
+                if (x1 < 0) {
+                    x1 = map_width + x1;
+                } else if (x1 >= map_width) {
+                    x1 = x1 mod map_width;
+                }
+                if (y1 < 0) {
+                    y1 = map_height + y1;
+                } else if (y1 >= map_height) {
+                    y1 = y1 mod map_height;
+                }
+            }
             if (in_range(x1, 0, map_width) && in_range(y1, 0, map_height)) {
                 // Cell is on map
                 var grid_cell = ds_grid_get(result, x1, y1);
@@ -56,6 +69,18 @@ while (ds_list_size(list_x) > 0 && done_cell / cell_num < full) {
         for (var i = 0; i < 4; i++) {
             var x1 = xx + dx(i);
             var y1 = yy + dy(i);
+            if (loop) {
+                if (x1 < 0) {
+                    x1 = map_width + x1;
+                } else if (x1 >= map_width) {
+                    x1 = x1 mod map_width;
+                }
+                if (y1 < 0) {
+                    y1 = map_height + y1;
+                } else if (y1 >= map_height) {
+                    y1 = y1 mod map_height;
+                }
+            }
             if (in_range(x1, 0, map_width) && in_range(y1, 0, map_height)) {
                 var grid_cell = ds_grid_get(result, x1, y1);
                 if (grid_cell > 0) {
