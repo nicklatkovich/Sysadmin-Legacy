@@ -27,7 +27,35 @@
             <kind>1</kind>
             <string>
 state = NULL_CELL;
+surf = -1;
 line_length = 0;
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="1" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>
+if (surface_exists(surf)) {
+    surface_free(surf);
+}
 
 </string>
           </argument>
@@ -52,15 +80,34 @@ line_length = 0;
           <argument>
             <kind>1</kind>
             <string>
-draw_set_color(c_green);
-if (state != CROSS_CELL) {
-    for (var d = 0; d &lt; 4; d++) {
-        if (state % ds(d) == 0) {
-            draw_line_width(x, y, x + dx(d) * oGame.line_length, y + dy(d) * oGame.line_length, 4);
-        }
-    }
+/*
+if (surface_exists(surf) == false) {
+    wayDraw();
 }
 
+var xx = x - line_length;
+var yy = y - line_length;
+/*
+var ddx = oGame.map_width * oGame.cell_size;
+var ddy = oGame.map_height * oGame.cell_size;
+do {
+    xx -= ddx;
+} until(xx &lt;= -2 * line_length);
+xx += ddx;
+do {
+    yy -= ddy;
+} until(yy &lt;= -2 * line_length);
+yy += ddy;
+
+for (var x1 = xx; x1 &lt; oAppSurf.dis_w; x1 += ddx) {
+    for (var y1 = yy; y1 &lt; oAppSurf.dis_h; y1 += ddy) {
+        draw_surface(surf, x1, y1);
+    }
+}
+*/
+//        draw_surface(surf, xx, yy);
+
+        
 </string>
           </argument>
         </arguments>

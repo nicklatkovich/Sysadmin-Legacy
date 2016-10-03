@@ -22,6 +22,8 @@
     <script>scripts\ds.gml</script>
     <script>scripts\ads.gml</script>
     <script>scripts\dl.gml</script>
+    <script>scripts\wayDraw.gml</script>
+    <script>scripts\gameDrawMapSurf.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\oAppSurf</object>
@@ -33,7 +35,8 @@
     <room>rooms\rm_init</room>
     <room>rooms\rm_game</room>
   </rooms>
-  <constants number="3">
+  <constants number="4">
+    <constant name="DEPTH_CROSS">-10</constant>
     <constant name="NULL_CELL">1</constant>
     <constant name="CROSS_CELL">210</constant>
     <constant name="MAX_UINT">4294967296</constant>

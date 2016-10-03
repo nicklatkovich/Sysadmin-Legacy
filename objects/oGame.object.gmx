@@ -26,8 +26,8 @@
           <argument>
             <kind>1</kind>
             <string>
-map_width = 10;
-map_height = 10;
+map_width = 20;
+map_height = 20;
 map = scr_maze_generate(map_width, map_height, 1, 1);
 
 enum OBJS {
@@ -38,6 +38,8 @@ enum OBJS {
 
 objs = ds_grid_create(map_width, map_height);
 ways = ds_grid_create(map_width, map_height);
+
+map_surf = -1;
 
 var cross_num = 0;
 for (var i = 0; i &lt; map_width; i++) {
@@ -155,9 +157,9 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
     yy = (dis_h - cell_size * map_height) / 2;
     
     for (var i = 0; i &lt; map_width; i++) {
-        var x2 = (i + 0.5) * cell_size + xx;
+        var x2 = (i + 0.5) * cell_size;
         for (var j = 0; j &lt; map_height; j++) {
-            var y2 = (j + 0.5) * cell_size + yy;
+            var y2 = (j + 0.5) * cell_size;
             var way = ds_grid_get(ways, i, j);
             way.x = x2;
             way.y = y2;
@@ -188,6 +190,7 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
           <argument>
             <kind>1</kind>
             <string>
+/*
 var cell_size, xx, yy;
 
 if (map_width / map_height &gt; oAppSurf.dis_w / oAppSurf.dis_h) {
@@ -236,7 +239,7 @@ for (var i = 0; i &lt; map_width; i++) {
     }
 }
 */
-
+/*
 for (var i = 0; i &lt; map_width; i++) {
     var x2 = i * cell_size + xx;
     for (var j = 0; j &lt; map_height; j++) {
@@ -249,6 +252,12 @@ for (var i = 0; i &lt; map_width; i++) {
         }
     }
 }
+*/
+
+if (surface_exists(map_surf) == false) {
+    gameDrawMapSurf();
+}
+draw_surface(map_surf, xx, yy);
 
 </string>
           </argument>
