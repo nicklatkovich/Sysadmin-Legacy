@@ -23,8 +23,7 @@
     <script>scripts\ds.gml</script>
     <script>scripts\ads.gml</script>
     <script>scripts\dl.gml</script>
-    <script>scripts\wayDraw.gml</script>
-    <script>scripts\gameDrawMapSurf.gml</script>
+    <script>scripts\ad.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\oAppSurf</object>

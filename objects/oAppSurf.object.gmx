@@ -34,6 +34,22 @@ if (window_get_fullscreen()) {
 
 instance_create(0, 0, oFPSViewer);
 
+/// ad help
+
+for (var i = 0; i &lt; 16; i++) {
+    var j = i;
+    var res = 1;
+    var d = 0;
+    while (j &gt; 0) {
+        if (j % 2) {
+            res *= ds(d);
+        }
+        d++;
+        j = j div 2;
+    }
+    global.ad_help[res] = i;
+}
+
 </string>
           </argument>
         </arguments>

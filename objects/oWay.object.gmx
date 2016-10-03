@@ -27,6 +27,7 @@
             <kind>1</kind>
             <string>
 state = NULL_CELL;
+dl_state = 0;
 surf = -1;
 line_length = 0;
 
@@ -79,36 +80,7 @@ if (surface_exists(surf)) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>
-/*
-if (surface_exists(surf) == false) {
-    wayDraw();
-}
-
-var xx = x - line_length;
-var yy = y - line_length;
-/*
-var ddx = oGame.map_width * oGame.cell_size;
-var ddy = oGame.map_height * oGame.cell_size;
-do {
-    xx -= ddx;
-} until(xx &lt;= -2 * line_length);
-xx += ddx;
-do {
-    yy -= ddy;
-} until(yy &lt;= -2 * line_length);
-yy += ddy;
-
-for (var x1 = xx; x1 &lt; oAppSurf.dis_w; x1 += ddx) {
-    for (var y1 = yy; y1 &lt; oAppSurf.dis_h; y1 += ddy) {
-        draw_surface(surf, x1, y1);
-    }
-}
-*/
-//        draw_surface(surf, xx, yy);
-
-        
-</string>
+            <string></string>
           </argument>
         </arguments>
       </action>

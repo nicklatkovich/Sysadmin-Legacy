@@ -39,6 +39,9 @@ enum OBJS {
 objs = ds_grid_create(map_width, map_height);
 ways = ds_grid_create(map_width, map_height);
 
+xx = 0;
+yy = 0;
+
 map_surf = -1;
 
 var cross_num = 0;
@@ -47,6 +50,7 @@ for (var i = 0; i &lt; map_width; i++) {
         
         var way = instance_create(0, 0, oWay);
         way.state = ds_grid_get(map, i, j);
+        way.dl_state = dl(way.state);
         ds_grid_set(ways, i, j, way);
         
         var l = dl(way.state);
@@ -152,7 +156,8 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
     
     half_cell_size = cell_size / 2;
     line_length = cell_size * 0.7;
-    
+    map_w = map_width * cell_size;
+    map_h = map_height * cell_size;
     xx = (dis_w - cell_size * map_width) / 2;
     yy = (dis_h - cell_size * map_height) / 2;
     
@@ -165,6 +170,8 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
             way.y = y2;
         }
     }
+    
+    spr_scale = cell_size / sprite_get_width(sWay);
 }
 
 </string>
@@ -190,74 +197,40 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
           <argument>
             <kind>1</kind>
             <string>
-/*
-var cell_size, xx, yy;
-
-if (map_width / map_height &gt; oAppSurf.dis_w / oAppSurf.dis_h) {
-    cell_size = oAppSurf.dis_w / map_width;
-} else {
-    cell_size = oAppSurf.dis_h / map_height;
-}
-
-var half_cell_size = cell_size / 2;
-var line_length = cell_size * 0.7;
-
-xx = (oAppSurf.dis_w - cell_size * map_width) / 2;
-yy = (oAppSurf.dis_h - cell_size * map_height) / 2;
-
-/// Grid Drawing
-/*
-var grid_line_width = cell_size div 16;
-for (var i = 0; i &lt;= map_width; i++) {
-    var x1 = xx + i * cell_size;
-    draw_line_width(x1, yy, x1, yy + cell_size * map_height, grid_line_width);
-}
-
-for (var i = 0; i &lt;= map_height; i++) {
-    var y1 = yy + i * cell_size;
-    draw_line_width(xx, y1, xx + cell_size * map_width, y1, grid_line_width);
-}
-*/
-
-/// Cell Drawing
-/*
-draw_set_color(c_green);
-for (var i = 0; i &lt; map_width; i++) {
-    var x2 = i * cell_size + xx;
-    var x1 = x2 + half_cell_size;
-    for (var j = 0; j &lt; map_height; j++) {
-        var y2 = j * cell_size + yy;
-        var y1 = y2 + half_cell_size;
-        var cell = ds_grid_get(map, i, j);
-        if (cell != CROSS_CELL) {
-            for (var d = 0; d &lt; 4; d++) {
-                if (cell % ds(d) == 0) {
-                    draw_line_width(x1, y1, x1 + dx(d) * line_length, y1 + dy(d) * line_length, 4);
-                }
+if (surface_exists(map_surf) == false) {
+    map_surf = surface_create(map_w, map_h);
+    
+    var sc = spr_scale;
+    
+    surface_set_target(map_surf);
+    with (oWay) {
+        if (state == CROSS_CELL) {
+            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, c_white, 1);
+        } else {
+            draw_sprite_ext(sWay, ad(state), x, y, sc, sc, 0, c_green, 1);
+            if (dl(state) == 1) {
+                draw_sprite_ext(sComp, 0, x, y, sc, sc, 0, c_ltgray, 1);
             }
         }
     }
+    surface_reset_target();
 }
-*/
-/*
-for (var i = 0; i &lt; map_width; i++) {
-    var x2 = i * cell_size + xx;
-    for (var j = 0; j &lt; map_height; j++) {
-        var y2 = j * cell_size + yy;
-        var obj = ds_grid_get(objs, i, j);
-        if (obj == OBJS.comp) {
-            draw_sprite_stretched(sComp, 0, x2, y2, cell_size, cell_size);
-        } else if (obj == OBJS.hub) {
-            draw_sprite_stretched(sHub, 0, x2, y2, cell_size, cell_size);
-        }
+
+var draw_x = xx;
+var draw_y = yy;
+var dis_w = oAppSurf.dis_w;
+var dis_h = oAppSurf.dis_h;
+if (draw_x &gt; 0) {
+    draw_x -= map_w;
+}
+if (draw_y &gt; 0) {
+    draw_y -= map_h;
+}
+for (var ddx = draw_x; ddx &lt; dis_w; ddx += map_w) {
+    for (var ddy = draw_y; ddy &lt; dis_h; ddy += map_h) {
+        draw_surface(map_surf, ddx, ddy);
     }
 }
-*/
-
-if (surface_exists(map_surf) == false) {
-    gameDrawMapSurf();
-}
-draw_surface(map_surf, xx, yy);
 
 </string>
           </argument>
