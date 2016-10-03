@@ -26,8 +26,8 @@
           <argument>
             <kind>1</kind>
             <string>
-map_width = 20;
-map_height = 20;
+map_width = 10;
+map_height = 10;
 map = scr_maze_generate(map_width, map_height, 1, 1, true);
 
 enum OBJS {
@@ -41,6 +41,9 @@ ways = ds_grid_create(map_width, map_height);
 
 xx = 0;
 yy = 0;
+drag = false;
+mx_prev = 0;
+my_prev = 0;
 
 map_surf = -1;
 
@@ -175,6 +178,32 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
     
     spr_scale = cell_size / sprite_get_width(sWay);
 }
+
+if (mouse_check_button_pressed(mb_right)) {
+    drag = true;
+} else if (mouse_check_button_released(mb_right)) {
+    drag = false;
+}
+
+if (drag) {
+    xx += mouse_x - mx_prev;
+    yy += mouse_y - my_prev;
+    if (xx &lt; 0) {
+        xx = abs(xx);
+        xx = map_w - xx;
+    } else if (xx &gt;= map_w) {
+        xx = xx mod map_w;
+    }
+    if (yy &lt; 0) {
+        yy = abs(yy);
+        yy = map_h - yy;
+    } else if (yy &gt;= map_h) {
+        yy = yy mod map_h;
+    }
+}
+
+mx_prev = mouse_x;
+my_prev = mouse_y;
 
 </string>
           </argument>
