@@ -8,6 +8,7 @@
   <sprites name="sprites">
     <sprite>sprites\sComp</sprite>
     <sprite>sprites\sHub</sprite>
+    <sprite>sprites\sWay</sprite>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
