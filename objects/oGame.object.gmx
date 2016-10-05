@@ -26,9 +26,9 @@
           <argument>
             <kind>1</kind>
             <string>
-map_width = 10;
-map_height = 10;
-map = scr_maze_generate(map_width, map_height, 1, 1, true);
+map_width = 27;
+map_height = 15;
+map = scr_maze_generate(map_width, map_height, 1, 0.5, true);
 
 enum OBJS {
     null,
@@ -36,7 +36,6 @@ enum OBJS {
     hub
 };
 
-objs = ds_grid_create(map_width, map_height);
 ways = ds_grid_create(map_width, map_height);
 
 xx = 0;
@@ -44,6 +43,7 @@ yy = 0;
 drag = false;
 mx_prev = 0;
 my_prev = 0;
+need_draw = false;
 
 map_surf = -1;
 
@@ -56,45 +56,9 @@ for (var i = 0; i &lt; map_width; i++) {
             way.state = ds_get;
             way.dl_state = dl(way.state);
             ds_grid_set(ways, i, j, way);
-            
-            var l = dl(way.state);
-            if (l == 1) {
-                ds_grid_set(objs, i, j, OBJS.comp);
-            } else {
-            /*
-                ds_grid_set(objs, i, j, OBJS.null);
-                if (l == 4) {
-                    cross_num++;
-                }
-            */
-                if (l == 4) {
-                    ds_grid_set(objs, i, j, OBJS.hub);
-                } else {
-                    ds_grid_set(objs, i, j, OBJS.null);
-                }
-            }
         }
     }
 }
-
-/*
-if (cross_num &gt; 0) {
-    var cur_cross = rand(cross_num);
-    for (var i = 0; i &lt; map_width; i++) {
-        for (var j = 0; j &lt; map_height; j++) {
-            var l = dl(ds_grid_get(map, i, j));
-            if (l == 4) {
-                cur_cross--;
-                if (cur_cross &lt; 0) {
-                    ds_grid_set(objs, i, j, OBJS.hub);
-                    j = MAX_UINT;
-                    i = MAX_UINT;
-                }
-            }
-        }
-    }
-}
-*/
 
 dis_w = -1;
 dis_h = -1;
@@ -177,6 +141,7 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
     }
     
     spr_scale = cell_size / sprite_get_width(sWay);
+    need_draw = true;
 }
 
 if (mouse_check_button_pressed(mb_right)) {
@@ -205,6 +170,17 @@ if (drag) {
 mx_prev = mouse_x;
 my_prev = mouse_y;
 
+if (mouse_check_button_pressed(mb_left)) {
+    var mx = (mouse_x + map_w - xx) mod map_w div cell_size;
+    var my = (mouse_y + map_h - yy) mod map_h div cell_size;
+    var cell_state = ds_grid_get(map, mx, my);
+    if (cell_state &gt; 0) {
+        var way = ds_grid_get(ways, mx, my);
+        way.diff--;
+        need_draw = true;
+    }
+}
+
 </string>
           </argument>
         </arguments>
@@ -228,23 +204,30 @@ my_prev = mouse_y;
           <argument>
             <kind>1</kind>
             <string>
+if (need_draw &amp;&amp; surface_exists(map_surf)) {
+    surface_free(map_surf);
+}
+
 if (surface_exists(map_surf) == false) {
     map_surf = surface_create(map_w, map_h);
     
     var sc = spr_scale;
     
     surface_set_target(map_surf);
+    draw_clear_alpha(c_black, 0);
     with (oWay) {
         if (state == CROSS_CELL) {
             draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, c_white, 1);
         } else {
-            draw_sprite_ext(sWay, ad(state), x, y, sc, sc, 0, c_green, 1);
+            var angle = diff * 90;
+            draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, c_green, 1);
             if (dl(state) == 1) {
                 draw_sprite_ext(sComp, 0, x, y, sc, sc, 0, c_ltgray, 1);
             }
         }
     }
     surface_reset_target();
+    need_draw = false;
 }
 
 var draw_x = xx;
@@ -259,7 +242,8 @@ if (draw_y &gt; 0) {
 }
 for (var ddx = draw_x; ddx &lt; dis_w; ddx += map_w) {
     for (var ddy = draw_y; ddy &lt; dis_h; ddy += map_h) {
-        draw_surface(map_surf, ddx, ddy);
+        // Костыль!!!
+        draw_surface_stretched(map_surf, ddx, ddy, map_w + 1, map_h + 1);
     }
 }
 
