@@ -26,8 +26,9 @@
           <argument>
             <kind>1</kind>
             <string>
-map_width = 27;
-map_height = 15;
+randomize();
+map_width = 21;
+map_height = 12;
 loop = true;
 
 map = scr_maze_generate(map_width, map_height, 1, 1, loop);
@@ -284,11 +285,12 @@ if (surface_exists(map_surf) == false) {
     surface_set_target(map_surf);
     draw_clear_alpha(c_black, 0);
     with (oWay) {
+        var color_to_draw = ds_grid_get(oGame.color_map, self.xx, self.yy);
         if (state == CROSS_CELL) {
-            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, self.hub.color, 1);
+            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, color_to_draw, 1);
         } else {
             var angle = diff * 90;
-            draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, ds_grid_get(oGame.color_map, self.xx, self.yy), 1);
+            draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, color_to_draw, 1);
             if (dl(state) == 1) {
                 draw_sprite_ext(sComp, 0, x, y, sc, sc, 0, c_ltgray, 1);
             }
