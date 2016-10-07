@@ -57,7 +57,8 @@ map_surf = -1;
 
 for (var i = 0; i &lt; map_width; i++) {
     for (var j = 0; j &lt; map_height; j++) {
-        var ds_get = ds_grid_get(map, i, j);
+        var ds_get = rotate_state(ds_grid_get(map, i, j), rand(4));
+        ds_grid_set(map, i, j, ds_get);
         if (ds_get &gt; 0) {
             var way = instance_create(0, 0, oWay);
             way.state = ds_get;
@@ -200,8 +201,10 @@ my = (mouse_y + map_h - yy) mod map_h div cell_size;
 if (mouse_check_button_pressed(mb_left)) {
     var cell_state = ds_grid_get(map, mx, my);
     if (cell_state &gt; 0) {
+        cell_state = rotate_state(cell_state, 3);
+        ds_grid_set(map, mx, my, cell_state);
         var way = ds_grid_get(ways, mx, my);
-        way.diff--;
+        way.state = cell_state;
         need_draw = true;
     }
 }
@@ -255,7 +258,7 @@ if (surface_exists(map_surf) == false) {
                     for (var d = 0; d &lt; 4; d++) {
                         var x1 = get_xdx(cell_xx, d, map_width, loop);
                         var y1 = get_ydy(cell_yy, d, map_height, loop);
-                        if (ds_grid_get(map, x1, y1) % ds(d + 2) == 0) {
+                        if (ds_grid_get(map, x1, y1) % ds(d + 2) == 0 &amp;&amp; ds_grid_get(map, cell_xx, cell_yy) % ds(d) == 0) {
                             if (ds_grid_get(color_map, x1, y1) == -1) {
                                 ds_grid_set(color_map, x1, y1, -2);
                                 ds_stack_push(color_list_x, x1);

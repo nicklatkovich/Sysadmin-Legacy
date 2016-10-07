@@ -30,7 +30,7 @@ state = NULL_CELL;
 dl_state = 0;
 surf = -1;
 line_length = 0;
-diff = rand(4);
+diff = 0;//rand(4);
 hub = -1;
 
 </string>
