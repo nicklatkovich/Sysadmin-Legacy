@@ -28,7 +28,7 @@
             <string>
 map_width = 27;
 map_height = 15;
-map = scr_maze_generate(map_width, map_height, 1, 0.5, true);
+map = scr_maze_generate(map_width, map_height, 1, 1, true);
 
 enum OBJS {
     null,
@@ -87,7 +87,6 @@ dis_h = -1;
             <kind>1</kind>
             <string>
 ds_grid_destroy(map);
-ds_grid_destroy(objs);
 ds_grid_destroy(ways);
 
 </string>
