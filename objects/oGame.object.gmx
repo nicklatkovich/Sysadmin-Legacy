@@ -28,7 +28,9 @@
             <string>
 map_width = 27;
 map_height = 15;
-map = scr_maze_generate(map_width, map_height, 1, 1, true);
+loop = true;
+
+map = scr_maze_generate(map_width, map_height, 1, 1, loop);
 
 color_map = ds_grid_create(map_width, map_height);
 ds_grid_clear(color_map, 0);
@@ -192,10 +194,10 @@ if (drag) {
 
 mx_prev = mouse_x;
 my_prev = mouse_y;
+mx = (mouse_x + map_w - xx) mod map_w div cell_size;
+my = (mouse_y + map_h - yy) mod map_h div cell_size;
 
 if (mouse_check_button_pressed(mb_left)) {
-    var mx = (mouse_x + map_w - xx) mod map_w div cell_size;
-    var my = (mouse_y + map_h - yy) mod map_h div cell_size;
     var cell_state = ds_grid_get(map, mx, my);
     if (cell_state &gt; 0) {
         var way = ds_grid_get(ways, mx, my);
@@ -232,34 +234,46 @@ if (need_draw &amp;&amp; surface_exists(map_surf)) {
 }
 
 if (surface_exists(map_surf) == false) {
-    var list_hubs
-    /*
     ds_grid_clear(color_map, -1);
     var color_list_x = ds_stack_create();
     var color_list_y = ds_stack_create();
     var color_list = ds_stack_create();
+
     for (var i = 0; i &lt; hubs_numb; i++) {
         var hub = ds_list_find_value(hubs, hubs_numb - i -1);
-        ds_stack_push(color_list_x, hub.x);
-        ds_stack_push(color_list_y, hub.y);
-        ds_stack_push(color_list, hub.color);
-    }
-    while (ds_stack_size(color_list) &gt; 0) {
-        var xx = ds_stack_pop(color_list_x);
-        var yy = ds_stack_pop(color_list_y);
-        var color = ds_stack_pop(color_list);
-        if (ds_grid_get(color_map, xx, yy) == -1) {
-            ds_grid_set(color_map, xx, yy, color);
-            for (var d = 0; d &lt; 4; d++) {
-                var x1 = xx + dx(d);
-                var y1 = yy + dy(d);
+        if (ds_grid_get(color_map, hub.x, hub.y) == -1) {
+            ds_stack_push(color_list_x, hub.x);
+            ds_stack_push(color_list_y, hub.y);
+            ds_stack_push(color_list, hub.color);
+            ds_grid_set(color_map, hub.x, hub.y, -2);
+            while (ds_stack_empty(color_list) == false) {
+                var cell_xx = ds_stack_pop(color_list_x);
+                var cell_yy = ds_stack_pop(color_list_y);
+                var cell_color = ds_stack_pop(color_list);
+                if (ds_grid_get(color_map, cell_xx, cell_yy) == -2) {
+                    ds_grid_set(color_map, cell_xx, cell_yy, cell_color);
+                    for (var d = 0; d &lt; 4; d++) {
+                        var x1 = get_xdx(cell_xx, d, map_width, loop);
+                        var y1 = get_ydy(cell_yy, d, map_height, loop);
+                        if (ds_grid_get(map, x1, y1) % ds(d + 2) == 0) {
+                            if (ds_grid_get(color_map, x1, y1) == -1) {
+                                ds_grid_set(color_map, x1, y1, -2);
+                                ds_stack_push(color_list_x, x1);
+                                ds_stack_push(color_list_y, y1);
+                                ds_stack_push(color_list, cell_color);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
+    
+    
     ds_stack_destroy(color_list_x);
     ds_stack_destroy(color_list_y);
     ds_stack_destroy(color_list);
-*/
+    
     map_surf = surface_create(map_w, map_h);
     
     var sc = spr_scale;
@@ -268,10 +282,10 @@ if (surface_exists(map_surf) == false) {
     draw_clear_alpha(c_black, 0);
     with (oWay) {
         if (state == CROSS_CELL) {
-            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, hub.color, 1);
+            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, self.hub.color, 1);
         } else {
             var angle = diff * 90;
-            draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, c_green, 1);
+            draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, ds_grid_get(oGame.color_map, self.xx, self.yy), 1);
             if (dl(state) == 1) {
                 draw_sprite_ext(sComp, 0, x, y, sc, sc, 0, c_ltgray, 1);
             }
@@ -297,6 +311,11 @@ for (var ddx = draw_x; ddx &lt; dis_w; ddx += map_w) {
         draw_surface_stretched(map_surf, ddx, ddy, map_w + 1, map_h + 1);
     }
 }
+
+var mouse_state = "";
+mouse_state += "mx = " + string(mx) + "#";
+mouse_state += "my = " + string(my) + "#";
+draw_text(0, 16, mouse_state);
 
 </string>
           </argument>

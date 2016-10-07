@@ -26,8 +26,6 @@
           <argument>
             <kind>1</kind>
             <string>
-x = -1;
-y = -1;
 color = 0;
 
 </string>
