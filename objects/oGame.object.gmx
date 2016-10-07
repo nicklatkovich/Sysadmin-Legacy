@@ -67,9 +67,12 @@ for (var i = 0; i &lt; map_width; i++) {
             ds_grid_set(ways, i, j, way);
             if (ds_grid_get(map, i, j) == CROSS_CELL) {
                 hubs_numb++;
-                var hub = instance_create(i, j, oHub);
+                var hub = instance_create(0, 0, oHub);
+                hub.xx = i;
+                hub.yy = j;
                 ds_list_add(hubs, hub);
                 way.hub = hub;
+                way.depth = DEPTH_CROSS;
             }
         }
     }
@@ -164,6 +167,10 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
             way.y = y2;
             way.xx = i;
             way.yy = j;
+            if (way.hub &gt;= 0) {
+                way.hub.x = way.x;
+                way.hub.y = way.y;
+            }
         }
     }
     
@@ -245,11 +252,11 @@ if (surface_exists(map_surf) == false) {
 
     for (var i = 0; i &lt; hubs_numb; i++) {
         var hub = ds_list_find_value(hubs, hubs_numb - i -1);
-        if (ds_grid_get(color_map, hub.x, hub.y) == -1) {
-            ds_stack_push(color_list_x, hub.x);
-            ds_stack_push(color_list_y, hub.y);
+        if (ds_grid_get(color_map, hub.xx, hub.yy) == -1) {
+            ds_stack_push(color_list_x, hub.xx);
+            ds_stack_push(color_list_y, hub.yy);
             ds_stack_push(color_list, hub.color);
-            ds_grid_set(color_map, hub.x, hub.y, -2);
+            ds_grid_set(color_map, hub.xx, hub.yy, -2);
             while (ds_stack_empty(color_list) == false) {
                 var cell_xx = ds_stack_pop(color_list_x);
                 var cell_yy = ds_stack_pop(color_list_y);
@@ -287,7 +294,7 @@ if (surface_exists(map_surf) == false) {
     with (oWay) {
         var color_to_draw = ds_grid_get(oGame.color_map, self.xx, self.yy);
         if (state == CROSS_CELL) {
-            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, color_to_draw, 1);
+//            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, color_to_draw, 1);
         } else {
             var angle = diff * 90;
             draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, color_to_draw, 1);
@@ -295,6 +302,11 @@ if (surface_exists(map_surf) == false) {
                 draw_sprite_ext(sComp, 0, x, y, sc, sc, 0, c_ltgray, 1);
             }
         }
+    }
+    for (var i = 0; i &lt; hubs_numb; i++) {
+        var hub = ds_list_find_value(hubs, i);
+        var color_to_draw = ds_grid_get(color_map, hub.xx, hub.yy);
+        draw_sprite_ext(sHub, 0, hub.x, hub.y, sc, sc, 0, color_to_draw, 1);
     }
     surface_reset_target();
     need_draw = false;
