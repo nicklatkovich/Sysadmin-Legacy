@@ -30,6 +30,7 @@
     <object>objects\oFPSViewer</object>
     <object>objects\oGame</object>
     <object>objects\oWay</object>
+    <object>objects\oHub</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_init</room>

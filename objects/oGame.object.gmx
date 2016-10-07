@@ -30,6 +30,12 @@ map_width = 27;
 map_height = 15;
 map = scr_maze_generate(map_width, map_height, 1, 1, true);
 
+color_map = ds_grid_create(map_width, map_height);
+ds_grid_clear(color_map, 0);
+
+hubs_numb = 0;
+hubs = ds_list_create();
+
 enum OBJS {
     null,
     comp,
@@ -47,7 +53,6 @@ need_draw = false;
 
 map_surf = -1;
 
-var cross_num = 0;
 for (var i = 0; i &lt; map_width; i++) {
     for (var j = 0; j &lt; map_height; j++) {
         var ds_get = ds_grid_get(map, i, j);
@@ -56,8 +61,23 @@ for (var i = 0; i &lt; map_width; i++) {
             way.state = ds_get;
             way.dl_state = dl(way.state);
             ds_grid_set(ways, i, j, way);
+            if (ds_grid_get(map, i, j) == CROSS_CELL) {
+                hubs_numb++;
+                var hub = instance_create(i, j, oHub);
+                ds_list_add(hubs, hub);
+                way.hub = hub;
+            }
         }
     }
+}
+ds_list_shuffle(hubs);
+
+var color = 127;
+var color_step = 256 / hubs_numb;
+for (var i = 0; i &lt; hubs_numb; i++) {
+    var hub = ds_list_find_value(hubs, i);
+    hub.color = make_color_hsv(floor(color) mod 256, 255, 255);
+    color += color_step;
 }
 
 dis_w = -1;
@@ -88,6 +108,8 @@ dis_h = -1;
             <string>
 ds_grid_destroy(map);
 ds_grid_destroy(ways);
+ds_list_destroy(hubs);
+ds_grid_destroy(color_map);
 
 </string>
           </argument>
@@ -208,6 +230,8 @@ if (need_draw &amp;&amp; surface_exists(map_surf)) {
 }
 
 if (surface_exists(map_surf) == false) {
+    var list_hubs
+
     map_surf = surface_create(map_w, map_h);
     
     var sc = spr_scale;
@@ -216,7 +240,7 @@ if (surface_exists(map_surf) == false) {
     draw_clear_alpha(c_black, 0);
     with (oWay) {
         if (state == CROSS_CELL) {
-            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, c_white, 1);
+            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, hub.color, 1);
         } else {
             var angle = diff * 90;
             draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, c_green, 1);
