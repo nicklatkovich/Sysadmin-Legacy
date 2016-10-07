@@ -90,6 +90,9 @@ for (var i = 0; i &lt; hubs_numb; i++) {
 dis_w = -1;
 dis_h = -1;
 
+drag_x = 0;
+drag_y = 0;
+
 </string>
           </argument>
         </arguments>
@@ -178,15 +181,32 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
     need_draw = true;
 }
 
-if (mouse_check_button_pressed(mb_right)) {
+mx = (mouse_x + map_w - xx) mod map_w div cell_size;
+my = (mouse_y + map_h - yy) mod map_h div cell_size;
+
+if (mouse_check_button_pressed(mb_left)) {
     drag = true;
-} else if (mouse_check_button_released(mb_right)) {
+} else if (mouse_check_button_released(mb_left)) {
+    if (drag_x &lt; cell_size &amp;&amp; drag_y &lt; cell_size) {
+        var cell_state = ds_grid_get(map, mx, my);
+        if (cell_state &gt; 0) {
+            cell_state = rotate_state(cell_state, 3);
+            ds_grid_set(map, mx, my, cell_state);
+            var way = ds_grid_get(ways, mx, my);
+            way.state = cell_state;
+            need_draw = true;
+        }
+    }
     drag = false;
+    drag_x = 0;
+    drag_y = 0;
 }
 
 if (drag) {
-    xx += mouse_x - mx_prev;
-    yy += mouse_y - my_prev;
+    var drag_dx = mouse_x - mx_prev;
+    var drag_dy = mouse_y - my_prev;
+    xx += drag_dx;
+    yy += drag_dy;
     if (xx &lt; 0) {
         xx = abs(xx);
         xx = map_w - xx;
@@ -199,23 +219,12 @@ if (drag) {
     } else if (yy &gt;= map_h) {
         yy = yy mod map_h;
     }
+    drag_x += abs(drag_dx);
+    drag_y += abs(drag_dy);
 }
 
 mx_prev = mouse_x;
 my_prev = mouse_y;
-mx = (mouse_x + map_w - xx) mod map_w div cell_size;
-my = (mouse_y + map_h - yy) mod map_h div cell_size;
-
-if (mouse_check_button_pressed(mb_left)) {
-    var cell_state = ds_grid_get(map, mx, my);
-    if (cell_state &gt; 0) {
-        cell_state = rotate_state(cell_state, 3);
-        ds_grid_set(map, mx, my, cell_state);
-        var way = ds_grid_get(ways, mx, my);
-        way.state = cell_state;
-        need_draw = true;
-    }
-}
 
 </string>
           </argument>
