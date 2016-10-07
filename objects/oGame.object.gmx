@@ -299,14 +299,15 @@ if (surface_exists(map_surf) == false) {
             var angle = diff * 90;
             draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, color_to_draw, 1);
             if (dl(state) == 1) {
-                draw_sprite_ext(sComp, 0, x, y, sc, sc, 0, c_ltgray, 1);
+                draw_sprite_ext(sComp, 0, x, y, sc, sc, 0, color_to_draw, 1);
             }
         }
     }
     for (var i = 0; i &lt; hubs_numb; i++) {
         var hub = ds_list_find_value(hubs, i);
         var color_to_draw = ds_grid_get(color_map, hub.xx, hub.yy);
-        draw_sprite_ext(sHub, 0, hub.x, hub.y, sc, sc, 0, color_to_draw, 1);
+        draw_sprite_ext(sHub, 0, hub.x, hub.y, sc, sc, 0, c_white, 1);
+        draw_sprite_ext(sComp, 0, hub.x, hub.y, sc, sc, 0, color_to_draw, 1);
     }
     surface_reset_target();
     need_draw = false;
