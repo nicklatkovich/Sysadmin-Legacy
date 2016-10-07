@@ -158,6 +158,8 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
             var way = ds_grid_get(ways, i, j);
             way.x = x2;
             way.y = y2;
+            way.xx = i;
+            way.yy = j;
         }
     }
     
@@ -231,7 +233,33 @@ if (need_draw &amp;&amp; surface_exists(map_surf)) {
 
 if (surface_exists(map_surf) == false) {
     var list_hubs
-
+    /*
+    ds_grid_clear(color_map, -1);
+    var color_list_x = ds_stack_create();
+    var color_list_y = ds_stack_create();
+    var color_list = ds_stack_create();
+    for (var i = 0; i &lt; hubs_numb; i++) {
+        var hub = ds_list_find_value(hubs, hubs_numb - i -1);
+        ds_stack_push(color_list_x, hub.x);
+        ds_stack_push(color_list_y, hub.y);
+        ds_stack_push(color_list, hub.color);
+    }
+    while (ds_stack_size(color_list) &gt; 0) {
+        var xx = ds_stack_pop(color_list_x);
+        var yy = ds_stack_pop(color_list_y);
+        var color = ds_stack_pop(color_list);
+        if (ds_grid_get(color_map, xx, yy) == -1) {
+            ds_grid_set(color_map, xx, yy, color);
+            for (var d = 0; d &lt; 4; d++) {
+                var x1 = xx + dx(d);
+                var y1 = yy + dy(d);
+            }
+        }
+    }
+    ds_stack_destroy(color_list_x);
+    ds_stack_destroy(color_list_y);
+    ds_stack_destroy(color_list);
+*/
     map_surf = surface_create(map_w, map_h);
     
     var sc = spr_scale;

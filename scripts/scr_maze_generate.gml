@@ -38,20 +38,8 @@ while (ds_list_size(list_x) > 0 && done_cell / cell_num < full) {
         var near_cells = 0;
         
         for (var i = 0; i < 4; i++) {
-            var x1 = xx + dx(i);
-            var y1 = yy + dy(i);
-            if (loop) {
-                if (x1 < 0) {
-                    x1 = map_width + x1;
-                } else if (x1 >= map_width) {
-                    x1 = x1 mod map_width;
-                }
-                if (y1 < 0) {
-                    y1 = map_height + y1;
-                } else if (y1 >= map_height) {
-                    y1 = y1 mod map_height;
-                }
-            }
+            var x1 = get_xdx(xx, i, map_width, loop);
+            var y1 = get_ydy(yy, i, map_height, loop);
             if (in_range(x1, 0, map_width) && in_range(y1, 0, map_height)) {
                 // Cell is on map
                 var grid_cell = ds_grid_get(result, x1, y1);
@@ -67,20 +55,9 @@ while (ds_list_size(list_x) > 0 && done_cell / cell_num < full) {
         
         var near = rand(near_cells);
         for (var i = 0; i < 4; i++) {
-            var x1 = xx + dx(i);
-            var y1 = yy + dy(i);
-            if (loop) {
-                if (x1 < 0) {
-                    x1 = map_width + x1;
-                } else if (x1 >= map_width) {
-                    x1 = x1 mod map_width;
-                }
-                if (y1 < 0) {
-                    y1 = map_height + y1;
-                } else if (y1 >= map_height) {
-                    y1 = y1 mod map_height;
-                }
-            }
+            var x1 = get_xdx(xx, i, map_width, loop);
+            var y1 = get_ydy(yy, i, map_height, loop);
+
             if (in_range(x1, 0, map_width) && in_range(y1, 0, map_height)) {
                 var grid_cell = ds_grid_get(result, x1, y1);
                 if (grid_cell > 0) {

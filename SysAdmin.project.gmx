@@ -24,6 +24,8 @@
     <script>scripts\ads.gml</script>
     <script>scripts\dl.gml</script>
     <script>scripts\ad.gml</script>
+    <script>scripts\get_xdx.gml</script>
+    <script>scripts\get_ydy.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\oAppSurf</object>
