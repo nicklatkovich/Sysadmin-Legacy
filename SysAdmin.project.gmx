@@ -30,6 +30,10 @@
     <script>scripts\get_xdx.gml</script>
     <script>scripts\get_ydy.gml</script>
     <script>scripts\rotate_state.gml</script>
+    <script>scripts\create_matherBoard.gml</script>
+    <script>scripts\matherBoard_resize.gml</script>
+    <script>scripts\rotate_cell.gml</script>
+    <script>scripts\move_matherBoard.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\oAppSurf</object>
@@ -41,6 +45,7 @@
     <objects name="buttons">
       <object>objects\oBtnPlay</object>
     </objects>
+    <object>objects\oMatherBoard</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_init</room>

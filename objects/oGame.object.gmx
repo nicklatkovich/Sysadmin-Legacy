@@ -26,65 +26,9 @@
           <argument>
             <kind>1</kind>
             <string>
-map_width = 5;
-map_height = 5;
-loop = true;
-
-map = scr_maze_generate(map_width, map_height, 1, 1, loop);
-
-color_map = ds_grid_create(map_width, map_height);
-ds_grid_clear(color_map, 0);
-
-hubs_numb = 0;
-hubs = ds_list_create();
-
-enum OBJS {
-    null,
-    comp,
-    hub
-};
-
-ways = ds_grid_create(map_width, map_height);
-
-xx = 0;
-yy = 0;
 drag = false;
 mx_prev = 0;
 my_prev = 0;
-need_draw = false;
-
-map_surf = -1;
-
-for (var i = 0; i &lt; map_width; i++) {
-    for (var j = 0; j &lt; map_height; j++) {
-        var ds_get = rotate_state(ds_grid_get(map, i, j), rand(4));
-        ds_grid_set(map, i, j, ds_get);
-        if (ds_get &gt; 0) {
-            var way = instance_create(0, 0, oWay);
-            way.state = ds_get;
-            way.dl_state = dl(way.state);
-            ds_grid_set(ways, i, j, way);
-            if (ds_grid_get(map, i, j) == CROSS_CELL) {
-                hubs_numb++;
-                var hub = instance_create(0, 0, oHub);
-                hub.xx = i;
-                hub.yy = j;
-                ds_list_add(hubs, hub);
-                way.hub = hub;
-                way.depth = DEPTH_CROSS;
-            }
-        }
-    }
-}
-ds_list_shuffle(hubs);
-
-var color = rand(256);
-var color_step = 256 / hubs_numb;
-for (var i = 0; i &lt; hubs_numb; i++) {
-    var hub = ds_list_find_value(hubs, i);
-    hub.color = make_color_hsv(floor(color) mod 256, 255, 255);
-    color += color_step;
-}
 
 dis_w = -1;
 dis_h = -1;
@@ -92,33 +36,7 @@ dis_h = -1;
 drag_x = 0;
 drag_y = 0;
 
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="1" enumb="0">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>
-ds_grid_destroy(map);
-ds_grid_destroy(ways);
-ds_list_destroy(hubs);
-ds_grid_destroy(color_map);
+_mb = create_matherBoard(21, 12, true);
 
 </string>
           </argument>
@@ -145,16 +63,16 @@ ds_grid_destroy(color_map);
             <string>/// make way strong
 
 if (point_distance(0, 0, drag_x, drag_y) &lt; tap_length) {
-    var cell_state = ds_grid_get(map, mx, my);
+    var cell_state = ds_grid_get(_mb.map, mx, my);
     if (cell_state % CELL_STRONG == 0) {
         cell_state /= CELL_STRONG;
     } else {
         cell_state *= CELL_STRONG;
     }
-    ds_grid_set(map, mx, my, cell_state);
-    var way = ds_grid_get(ways, mx, my);
+    ds_grid_set(_mb.map, mx, my, cell_state);
+    var way = ds_grid_get(_mb.ways, mx, my);
     way.state = cell_state;
-    need_draw = true;
+    _mb.need_draw = true;
 }
 
 </string>
@@ -183,46 +101,26 @@ if (point_distance(0, 0, drag_x, drag_y) &lt; tap_length) {
 if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
     dis_w = oAppSurf.dis_w;
     dis_h = oAppSurf.dis_h;
+    var cell_size;
 
-    if (map_width / map_height &gt; dis_w / dis_h) {
-        cell_size = dis_w / map_width;
+    if (_mb.map_width / _mb.map_height &gt; dis_w / dis_h) {
+        cell_size = dis_w / _mb.map_width;
     } else {
-        cell_size = dis_h / map_height;
+        cell_size = dis_h / _mb.map_height;
     }
     
-    tap_length = cell_size / 2;
-    half_cell_size = cell_size / 2;
-    line_length = cell_size * 0.7;
-    map_w = map_width * cell_size;
-    map_h = map_height * cell_size;
-    xx = (dis_w - cell_size * map_width) / 2 mod map_w;
-    yy = (dis_h - cell_size * map_height) / 2 mod map_h;
+    matherBoard_resize(_mb, cell_size);
     
-    for (var i = 0; i &lt; map_width; i++) {
-        var x2 = (i + 0.5) * cell_size;
-        for (var j = 0; j &lt; map_height; j++) {
-            var y2 = (j + 0.5) * cell_size;
-            var way = ds_grid_get(ways, i, j);
-            way.x = x2;
-            way.y = y2;
-            way.xx = i;
-            way.yy = j;
-            if (way.hub &gt;= 0) {
-                way.hub.x = way.x;
-                way.hub.y = way.y;
-            }
-        }
-    }
-    
-    spr_scale = cell_size / sprite_get_width(sWay);
-    need_draw = true;
+    tap_length = _mb.cell_size / 2;
+    _mb.xx = (dis_w - _mb.cell_size * _mb.map_width) / 2 mod _mb.map_w;
+    _mb.yy = (dis_h - _mb.cell_size * _mb.map_height) / 2 mod _mb.map_h;
 }
 
 mcx = window_mouse_get_x();
 mcy = window_mouse_get_y();
 
-mx = (mcx + map_w - xx) mod map_w div cell_size;
-my = (mcy + map_h - yy) mod map_h div cell_size;
+mx = (mcx + _mb.map_w - _mb.xx) mod _mb.map_w div _mb.cell_size;
+my = (mcy + _mb.map_h - _mb.yy) mod _mb.map_h div _mb.cell_size;
 
 if (mouse_check_button_pressed(mb_left)) {
     mx_prev = mcx;
@@ -232,14 +130,7 @@ if (mouse_check_button_pressed(mb_left)) {
 } else if (mouse_check_button_released(mb_left) &amp;&amp; drag) {
     alarm[0] = -1;
     if (point_distance(0, 0, drag_x, drag_y) &lt; tap_length) {
-        var cell_state = ds_grid_get(map, mx, my);
-        if (cell_state &gt; 0 &amp;&amp; cell_state % CELL_STRONG != 0) {
-            cell_state = rotate_state(cell_state, 3);
-            ds_grid_set(map, mx, my, cell_state);
-            var way = ds_grid_get(ways, mx, my);
-            way.state = cell_state;
-            need_draw = true;
-        }
+        rotate_cell(_mb, mx, my, 3);
     }
     drag = false;
     drag_x = 0;
@@ -249,20 +140,7 @@ if (mouse_check_button_pressed(mb_left)) {
 if (drag) {
     var drag_dx = mcx - mx_prev;
     var drag_dy = mcy - my_prev;
-    xx += drag_dx;
-    yy += drag_dy;
-    if (xx &lt; 0) {
-        xx = abs(xx);
-        xx = map_w - xx;
-    } else if (xx &gt;= map_w) {
-        xx = xx mod map_w;
-    }
-    if (yy &lt; 0) {
-        yy = abs(yy);
-        yy = map_h - yy;
-    } else if (yy &gt;= map_h) {
-        yy = yy mod map_h;
-    }
+    move_matherBoard(_mb, drag_dx, drag_dy);
     drag_x += abs(drag_dx);
     drag_y += abs(drag_dy);
 }
@@ -293,100 +171,6 @@ my_prev = mcy;
           <argument>
             <kind>1</kind>
             <string>
-if (need_draw &amp;&amp; surface_exists(map_surf)) {
-    surface_free(map_surf);
-}
-
-if (surface_exists(map_surf) == false) {
-    ds_grid_clear(color_map, -1);
-    var color_list_x = ds_stack_create();
-    var color_list_y = ds_stack_create();
-    var color_list = ds_stack_create();
-
-    for (var i = 0; i &lt; hubs_numb; i++) {
-        var hub = ds_list_find_value(hubs, hubs_numb - i -1);
-        if (ds_grid_get(color_map, hub.xx, hub.yy) == -1) {
-            ds_stack_push(color_list_x, hub.xx);
-            ds_stack_push(color_list_y, hub.yy);
-            ds_stack_push(color_list, hub.color);
-            ds_grid_set(color_map, hub.xx, hub.yy, -2);
-            while (ds_stack_empty(color_list) == false) {
-                var cell_xx = ds_stack_pop(color_list_x);
-                var cell_yy = ds_stack_pop(color_list_y);
-                var cell_color = ds_stack_pop(color_list);
-                if (ds_grid_get(color_map, cell_xx, cell_yy) == -2) {
-                    ds_grid_set(color_map, cell_xx, cell_yy, cell_color);
-                    for (var d = 0; d &lt; 4; d++) {
-                        var x1 = get_xdx(cell_xx, d, map_width, loop);
-                        var y1 = get_ydy(cell_yy, d, map_height, loop);
-                        if (ds_grid_get(map, x1, y1) % ds(d + 2) == 0 &amp;&amp; ds_grid_get(map, cell_xx, cell_yy) % ds(d) == 0) {
-                            if (ds_grid_get(color_map, x1, y1) == -1) {
-                                ds_grid_set(color_map, x1, y1, -2);
-                                ds_stack_push(color_list_x, x1);
-                                ds_stack_push(color_list_y, y1);
-                                ds_stack_push(color_list, cell_color);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    
-    ds_stack_destroy(color_list_x);
-    ds_stack_destroy(color_list_y);
-    ds_stack_destroy(color_list);
-    
-    map_surf = surface_create(map_w, map_h);
-    
-    var sc = spr_scale;
-    
-    surface_set_target(map_surf);
-    draw_clear_alpha(c_black, 0);
-    with (oWay) {
-        var color_to_draw = ds_grid_get(oGame.color_map, self.xx, self.yy);
-        if (state % CROSS_CELL == 0) {
-//            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, color_to_draw, 1);
-        } else {
-            var angle = diff * 90;
-            if (state % CELL_STRONG == 0) {
-                draw_sprite_ext(sStrongWay, ad(state), x, y, sc, sc, angle, color_to_draw, 1);
-            } else {
-                draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, color_to_draw, 1);
-            }
-            if (dl(state) == 1) {
-                draw_sprite_ext(sComp, 0, x, y, sc, sc, 0, color_to_draw, 1);
-            }
-        }
-    }
-    for (var i = 0; i &lt; hubs_numb; i++) {
-        var hub = ds_list_find_value(hubs, i);
-        var color_to_draw = ds_grid_get(color_map, hub.xx, hub.yy);
-        draw_sprite_ext(sHub, 0, hub.x, hub.y, sc, sc, 0, c_white, 1);
-        draw_sprite_ext(sComp, 0, hub.x, hub.y, sc, sc, 0, color_to_draw, 1);
-    }
-    surface_reset_target();
-    need_draw = false;
-}
-
-var draw_x = xx;
-var draw_y = yy;
-var dis_w = oAppSurf.dis_w;
-var dis_h = oAppSurf.dis_h;
-if (draw_x &gt; 0) {
-    draw_x -= map_w;
-}
-if (draw_y &gt; 0) {
-    draw_y -= map_h;
-}
-for (var ddx = draw_x; ddx &lt; dis_w; ddx += map_w) {
-    for (var ddy = draw_y; ddy &lt; dis_h; ddy += map_h) {
-        // Костыль!!!
-        draw_surface_stretched(map_surf, ddx, ddy, map_w + 1, map_h + 1);
-    }
-}
-
 var mouse_state = "";
 mouse_state += "mx = " + string(mx) + "#";
 mouse_state += "my = " + string(my) + "#";
