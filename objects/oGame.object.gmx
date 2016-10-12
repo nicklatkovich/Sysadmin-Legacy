@@ -26,9 +26,8 @@
           <argument>
             <kind>1</kind>
             <string>
-randomize();
-map_width = 21;
-map_height = 12;
+map_width = 5;
+map_height = 5;
 loop = true;
 
 map = scr_maze_generate(map_width, map_height, 1, 1, loop);
@@ -79,7 +78,7 @@ for (var i = 0; i &lt; map_width; i++) {
 }
 ds_list_shuffle(hubs);
 
-var color = 127;
+var color = rand(256);
 var color_step = 256 / hubs_numb;
 for (var i = 0; i &lt; hubs_numb; i++) {
     var hub = ds_list_find_value(hubs, i);
