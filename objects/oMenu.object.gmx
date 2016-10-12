@@ -3,8 +3,8 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>5</depth>
-  <persistent>-1</persistent>
+  <depth>0</depth>
+  <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
@@ -25,21 +25,19 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// common settings
+            <string>
+dis_w = -1;
+dis_h = -1;
 
-device_mouse_dbclick_enable(false);
-if (window_get_fullscreen()) {
-    scr_display_resize(display_get_width(), display_get_height());
-} else {
-    scr_display_resize(413, 704);
-}
-
-instance_create(0, 0, oFPSViewer);
+_objs = ds_list_create();
+ds_list_add(_objs, instance_create(0, 0, oBtnPlay));
 
 </string>
           </argument>
         </arguments>
       </action>
+    </event>
+    <event eventtype="1" enumb="0">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -56,53 +54,8 @@ instance_create(0, 0, oFPSViewer);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// ad help
-
-for (var i = 0; i &lt; 16; i++) {
-    var j = i;
-    var res = 1;
-    var d = 0;
-    while (j &gt; 0) {
-        if (j % 2) {
-            res *= ds(d);
-        }
-        d++;
-        j = j div 2;
-    }
-    global.ad_help[res] = i;
-}
-
-</string>
-          </argument>
-        </arguments>
-      </action>
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>/// money
-
-var file_name = "save.dat",
-
-if (file_exists(file_name)) {
-    file = file_text_open_read(file_name);
-    global.money = real(file_text_read_string(file));
-    file_text_close(file);
-} else {
-    global.money = 0;
-}
+            <string>
+ds_list_destroy(_objs);
 
 </string>
           </argument>
@@ -126,18 +79,21 @@ if (file_exists(file_name)) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Check for fullscreen resize
-
-if (window_get_fullscreen()) {
-    var new_dis_w = display_get_width();
-    var new_dis_h = display_get_height();
-    if (dis_w != new_dis_w || dis_h != new_dis_h) {
-        scr_display_resize(new_dis_w, new_dis_h);
+            <string>
+if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
+    dis_w = oAppSurf.dis_w;
+    dis_h = oAppSurf.dis_h;
+    
+    var xx = dis_w / 2;
+    var objs_number = ds_list_size(_objs);
+    var yy_step = dis_h / (objs_number + 1);
+    var yy = yy_step / 2;
+    for (var i = 0; i &lt; objs_number; i++) {
+        var obj = ds_list_find_value(_objs, i);
+        obj.x = xx;
+        obj.y = yy;
+        yy += yy_step;
     }
-}
-
-if (keyboard_check_pressed(vk_escape)) {
-    game_end();
 }
 
 </string>

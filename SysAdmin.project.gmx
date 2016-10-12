@@ -10,6 +10,8 @@
     <sprite>sprites\sHub</sprite>
     <sprite>sprites\sWay</sprite>
     <sprite>sprites\sStrongWay</sprite>
+    <sprite>sprites\sBtn</sprite>
+    <sprite>sprites\sTextPlay</sprite>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
@@ -35,9 +37,14 @@
     <object>objects\oGame</object>
     <object>objects\oWay</object>
     <object>objects\oHub</object>
+    <object>objects\oMenu</object>
+    <objects name="buttons">
+      <object>objects\oBtnPlay</object>
+    </objects>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_init</room>
+    <room>rooms\rm_menu</room>
     <room>rooms\rm_game</room>
   </rooms>
   <constants number="5">
