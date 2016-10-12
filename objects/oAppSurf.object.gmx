@@ -26,6 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>
+device_mouse_dbclick_enable(false);
 if (window_get_fullscreen()) {
     scr_display_resize(display_get_width(), display_get_height());
 } else {

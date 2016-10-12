@@ -185,6 +185,8 @@ mx = (mouse_x + map_w - xx) mod map_w div cell_size;
 my = (mouse_y + map_h - yy) mod map_h div cell_size;
 
 if (mouse_check_button_pressed(mb_left)) {
+    mx_prev = mouse_x;
+    my_prev = mouse_y;
     drag = true;
 } else if (mouse_check_button_released(mb_left)) {
     if (drag_x &lt; cell_size &amp;&amp; drag_y &lt; cell_size) {
