@@ -229,7 +229,7 @@ if (mouse_check_button_pressed(mb_left)) {
     my_prev = mcy;
     drag = true;
     alarm[0] = room_speed;
-} else if (mouse_check_button_released(mb_left)) {
+} else if (mouse_check_button_released(mb_left) &amp;&amp; drag) {
     alarm[0] = -1;
     if (point_distance(0, 0, drag_x, drag_y) &lt; tap_length) {
         var cell_state = ds_grid_get(map, mx, my);
