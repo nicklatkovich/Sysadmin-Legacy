@@ -12,9 +12,5 @@ if (window_get_fullscreen() == false) {
     window_set_size(oAppSurf.dis_w, oAppSurf.dis_h);
 }
 
-view_wview[0] = oAppSurf.dis_w;
-view_hview[0] = oAppSurf.dis_h;
-view_wport[0] = oAppSurf.dis_w;
-view_hport[0] = oAppSurf.dis_h;
 surface_resize(application_surface, oAppSurf.dis_w, oAppSurf.dis_h);
 
