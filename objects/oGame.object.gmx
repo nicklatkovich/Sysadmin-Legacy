@@ -181,12 +181,15 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
     need_draw = true;
 }
 
-mx = (mouse_x + map_w - xx) mod map_w div cell_size;
-my = (mouse_y + map_h - yy) mod map_h div cell_size;
+mcx = window_mouse_get_x();
+mcy = window_mouse_get_y();
+
+mx = (mcx + map_w - xx) mod map_w div cell_size;
+my = (mcy + map_h - yy) mod map_h div cell_size;
 
 if (mouse_check_button_pressed(mb_left)) {
-    mx_prev = mouse_x;
-    my_prev = mouse_y;
+    mx_prev = mcx;
+    my_prev = mcy;
     drag = true;
 } else if (mouse_check_button_released(mb_left)) {
     if (drag_x &lt; cell_size &amp;&amp; drag_y &lt; cell_size) {
@@ -205,8 +208,8 @@ if (mouse_check_button_pressed(mb_left)) {
 }
 
 if (drag) {
-    var drag_dx = mouse_x - mx_prev;
-    var drag_dy = mouse_y - my_prev;
+    var drag_dx = mcx - mx_prev;
+    var drag_dy = mcy - my_prev;
     xx += drag_dx;
     yy += drag_dy;
     if (xx &lt; 0) {
@@ -225,15 +228,15 @@ if (drag) {
     drag_y += abs(drag_dy);
 }
 
-mx_prev = mouse_x;
-my_prev = mouse_y;
+mx_prev = mcx;
+my_prev = mcy;
 
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="8" enumb="0">
+    <event eventtype="8" enumb="64">
       <action>
         <libid>1</libid>
         <id>603</id>
