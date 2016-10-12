@@ -126,6 +126,43 @@ ds_grid_destroy(color_map);
         </arguments>
       </action>
     </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// make way strong
+
+if (point_distance(0, 0, drag_x, drag_y) &lt; tap_length) {
+    var cell_state = ds_grid_get(map, mx, my);
+    if (cell_state % CELL_STRONG == 0) {
+        cell_state /= CELL_STRONG;
+    } else {
+        cell_state *= CELL_STRONG;
+    }
+    ds_grid_set(map, mx, my, cell_state);
+    var way = ds_grid_get(ways, mx, my);
+    way.state = cell_state;
+    need_draw = true;
+}
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="3" enumb="0">
       <action>
         <libid>1</libid>
@@ -154,6 +191,7 @@ if (dis_w != oAppSurf.dis_w || dis_h != oAppSurf.dis_h) {
         cell_size = dis_h / map_height;
     }
     
+    tap_length = cell_size / 2;
     half_cell_size = cell_size / 2;
     line_length = cell_size * 0.7;
     map_w = map_width * cell_size;
@@ -191,10 +229,12 @@ if (mouse_check_button_pressed(mb_left)) {
     mx_prev = mcx;
     my_prev = mcy;
     drag = true;
+    alarm[0] = room_speed;
 } else if (mouse_check_button_released(mb_left)) {
-    if (drag_x &lt; cell_size &amp;&amp; drag_y &lt; cell_size) {
+    alarm[0] = -1;
+    if (point_distance(0, 0, drag_x, drag_y) &lt; tap_length) {
         var cell_state = ds_grid_get(map, mx, my);
-        if (cell_state &gt; 0) {
+        if (cell_state &gt; 0 &amp;&amp; cell_state % CELL_STRONG != 0) {
             cell_state = rotate_state(cell_state, 3);
             ds_grid_set(map, mx, my, cell_state);
             var way = ds_grid_get(ways, mx, my);
@@ -307,11 +347,15 @@ if (surface_exists(map_surf) == false) {
     draw_clear_alpha(c_black, 0);
     with (oWay) {
         var color_to_draw = ds_grid_get(oGame.color_map, self.xx, self.yy);
-        if (state == CROSS_CELL) {
+        if (state % CROSS_CELL == 0) {
 //            draw_sprite_ext(sHub, 0, x, y, sc, sc, 0, color_to_draw, 1);
         } else {
             var angle = diff * 90;
-            draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, color_to_draw, 1);
+            if (state % CELL_STRONG == 0) {
+                draw_sprite_ext(sStrongWay, ad(state), x, y, sc, sc, angle, color_to_draw, 1);
+            } else {
+                draw_sprite_ext(sWay, ad(state), x, y, sc, sc, angle, color_to_draw, 1);
+            }
             if (dl(state) == 1) {
                 draw_sprite_ext(sComp, 0, x, y, sc, sc, 0, color_to_draw, 1);
             }

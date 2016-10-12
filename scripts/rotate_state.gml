@@ -11,5 +11,9 @@ for (var d = 0; d < 4; d++) {
     }
 }
 
+if (state_r % CELL_STRONG == 0) {
+    result *= CELL_STRONG;
+}
+
 return result;
 
